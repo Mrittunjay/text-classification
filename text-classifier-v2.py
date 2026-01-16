@@ -36,7 +36,7 @@ print()
 print(df['Unnamed: 3'].unique())
 print()
 
-# Keepint useful columns and discurding other columns
+# Keeping useful columns and discurding other columns
 df = df.drop(['Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4'], axis=1)
 df.rename(columns={'v1':'label', 'v2':'email'}, inplace=True)
 df = df[['email', 'label']] # Changing column position

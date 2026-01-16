@@ -31,7 +31,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import LinearSVC
 from sklearn.metrics import classification_report, confusion_matrix
-from sklearn.decomposition import PCA   # Principal Component Analysis
+from sklearn.decomposition import PCA, TruncatedSVD   # Principal Component Analysis
 from sklearn.manifold import TSNE       # t-distributed Sthocastic Neighbour Embedding
 from sklearn.decomposition import TruncatedSVD
 
@@ -130,16 +130,28 @@ X_test_tfidf = tfidf.transform(X_test)
 # Checking data linerity (to figure out if LinearSVC is a suitable model for this problem or not)
 X_tfidf_pca = tfidf.fit_transform(df_copy['email_clean']).toarray()
 y_pca = df_copy['label_num']    # labelEncoded data (ham:0, spam:1)
-pca = PCA(n_components=2)
-X_pca = pca.fit_transform(X_tfidf_pca)
+pca = PCA(n_components=3)
+
+svd = TruncatedSVD(n_components=3, random_state=50)
+X_reduced = svd.fit_transform(tfidf.fit_transform(df_copy['email_clean']))
+
+# X_pca = pca.fit_transform(X_tfidf_pca)
+X_pca = pca.fit_transform(X_reduced)
+
 # Plotting the results
 plt.figure(figsize=(10, 6))
 for label, color in zip([0, 1], ['blue', 'red']):
-    plt.scatter(X_pca[y == label, 0], X_pca[y == label, 1],
+    plt.scatter(X_pca[y_pca == label, 0], X_pca[y_pca == label, 1],
                 label='Ham' if label == 0 else 'Spam', alpha=0.5, c=color)
 plt.title("PCA Projection: Checking for linear separability")
 plt.legend()
 plt.show()
+
+
+print("Explained variance ratio:")
+print(pca.explained_variance_ratio_)
+print("Total explained variance: ", pca.explained_variance_ratio_.sum())
+
 
 # Using t-SNE(t-distributed Stocastic Neighbour Embedding) to check linearly separable.
 # 1. Sparse-friendly PCA (TruncatedSDV) to reduce noise first
