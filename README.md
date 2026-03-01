@@ -17,3 +17,13 @@ to check if data was linearly separable.
 
 DATA SOURCE:
 https://www.kaggle.com/datasets/shantanudhakadd/email-spam-detection-dataset-classification/data
+
+
+"text-classifier-v2.py"
+SPAM/HAM CLASSIFICATION INITIAL RUN
+
+
+"text-classifier.py"
+DUMMY MODEL PRACTICE WITH SMALL DATA (TOPIC CLASSIFICATION PROBLEM)
+Model used: MultinomialNB  --> Naive Bayes
+Vectorization: CountVectorizer(BoW)
